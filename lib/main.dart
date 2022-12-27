@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:workit/data/company_repo_impl.dart';
+import 'package:workit/data/datasource/network_datasource.dart';
+import 'package:workit/domain/repo/company_repo.dart';
+import 'package:workit/domain/usecase/get_companies_usecase.dart';
+import 'package:workit/ui/companies/companies_bloc.dart';
 import 'package:workit/ui/companies/companies_tab.dart';
 import 'package:workit/ui/jobs/jobs_tab.dart';
 
 void main() {
-  runApp(const MyApp());
+  NetworkDataSource networkDataSource = NetworkDataSource();
+  CompanyRepository companyRepository =
+      CompanyRepositoryImpl(networkDataSource);
+  GetCompaniesUseCase getCompaniesUseCase =
+      GetCompaniesUseCase(companyRepository);
+  runApp(MyApp(getCompaniesUseCase));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  GetCompaniesUseCase getCompaniesUseCase;
+
+  MyApp(this.getCompaniesUseCase, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -17,7 +30,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: HomePage());
+        home: BlocProvider(
+          create: (context) => CompaniesBloc(getCompaniesUseCase),
+          child: HomePage(),
+        ));
   }
 }
 

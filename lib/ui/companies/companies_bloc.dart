@@ -14,9 +14,12 @@ class CompaniesBloc extends Bloc<CompaniesEvent, CompaniesState> {
   GetCompaniesUseCase getCompaniesUseCase;
 
   CompaniesBloc(this.getCompaniesUseCase) : super(CompaniesInitial()) {
-    on<CompaniesEvent>((event, emit) {
-
-      // TODO: implement event handler
+    on<CompaniesEvent>((event, emit) async {
+      if (event is LoadCompaniesEvent) {
+        emit.call(CompaniesLoadingState());
+        List<Company> result = await getCompaniesUseCase.execute();
+        emit.call(CompaniesLoadedState(result));
+      }
     });
   }
 }
