@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workit/data/company_repo_impl.dart';
 import 'package:workit/data/datasource/network_datasource.dart';
+import 'package:workit/data/job_repo_impl.dart';
 import 'package:workit/domain/repo/company_repo.dart';
+import 'package:workit/domain/repo/job_repo.dart';
 import 'package:workit/domain/usecase/get_companies_usecase.dart';
+import 'package:workit/domain/usecase/get_jobs_usecase.dart';
 import 'package:workit/ui/companies/companies_bloc.dart';
 import 'package:workit/ui/companies/companies_tab.dart';
+import 'package:workit/ui/jobs/jobs_bloc.dart';
 import 'package:workit/ui/jobs/jobs_tab.dart';
 
 void main() {
@@ -14,13 +18,16 @@ void main() {
       CompanyRepositoryImpl(networkDataSource);
   GetCompaniesUseCase getCompaniesUseCase =
       GetCompaniesUseCase(companyRepository);
-  runApp(MyApp(getCompaniesUseCase));
+  JobRepository jobRepository = JobRepositoryImpl(networkDataSource);
+  GetJobsUseCase getJobsUseCase = GetJobsUseCase(jobRepository);
+  runApp(MyApp(getCompaniesUseCase, getJobsUseCase));
 }
 
 class MyApp extends StatelessWidget {
+  GetJobsUseCase getJobsUseCase;
   GetCompaniesUseCase getCompaniesUseCase;
 
-  MyApp(this.getCompaniesUseCase, {super.key});
+  MyApp(this.getCompaniesUseCase, this.getJobsUseCase, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -30,8 +37,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocProvider(
-          create: (context) => CompaniesBloc(getCompaniesUseCase),
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => CompaniesBloc(getCompaniesUseCase),
+            ),
+            BlocProvider(create: (context) => JobsBloc(getJobsUseCase))
+          ],
           child: HomePage(),
         ));
   }
