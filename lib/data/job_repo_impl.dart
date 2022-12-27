@@ -11,4 +11,8 @@ class JobRepositoryImpl implements JobRepository {
   Future<List<Job>> getAllJobs() {
     return networkDataSource.getAllJobs();
   }
+  @override
+  Future<List<Job>> getAllJobsOfCompany(String companyID) {
+    return networkDataSource.getAllJobsOfCompany(companyID);
+  }
 }

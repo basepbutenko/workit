@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:workit/ui/company/company_page.dart';
 
 import 'companies_bloc.dart';
 
@@ -30,16 +31,21 @@ class _CompaniesTabState extends State<CompaniesTab> {
               },
               itemCount: state.companies.length,
               itemBuilder: (BuildContext ctxt, int index) {
-                return Row(
-                  children: [
-                    Column(
-                      children: [
-                        Text(state.companies[index].name),
-                        Text(state.companies[index].description),
-                        Text(state.companies[index].industry),
-                      ],
-                    ),
-                  ],
+                return GestureDetector(
+                  onTapUp: (a) {Navigator.of(context).push(MaterialPageRoute(
+
+                      builder: (context) => CompanyPage(state.companies[index].id.toString())));},
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text(state.companies[index].name),
+                          Text(state.companies[index].description),
+                          Text(state.companies[index].industry),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               });
         }

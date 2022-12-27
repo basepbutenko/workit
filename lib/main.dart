@@ -9,8 +9,11 @@ import 'package:workit/domain/usecase/get_companies_usecase.dart';
 import 'package:workit/domain/usecase/get_jobs_usecase.dart';
 import 'package:workit/ui/companies/companies_bloc.dart';
 import 'package:workit/ui/companies/companies_tab.dart';
+import 'package:workit/ui/company/company_bloc.dart';
 import 'package:workit/ui/jobs/jobs_bloc.dart';
 import 'package:workit/ui/jobs/jobs_tab.dart';
+
+import 'domain/usecase/get_jobs_of_company_usecase.dart';
 
 void main() {
   NetworkDataSource networkDataSource = NetworkDataSource();
@@ -20,32 +23,39 @@ void main() {
       GetCompaniesUseCase(companyRepository);
   JobRepository jobRepository = JobRepositoryImpl(networkDataSource);
   GetJobsUseCase getJobsUseCase = GetJobsUseCase(jobRepository);
-  runApp(MyApp(getCompaniesUseCase, getJobsUseCase));
+  GetJobsOfCompanyUseCase getJobsOfCompanyUseCase =
+      GetJobsOfCompanyUseCase(jobRepository);
+  runApp(MyApp(getCompaniesUseCase, getJobsUseCase, getJobsOfCompanyUseCase));
 }
 
 class MyApp extends StatelessWidget {
   GetJobsUseCase getJobsUseCase;
   GetCompaniesUseCase getCompaniesUseCase;
+  GetJobsOfCompanyUseCase getJobsOfCompanyUseCase;
 
-  MyApp(this.getCompaniesUseCase, this.getJobsUseCase, {super.key});
+  MyApp(this.getCompaniesUseCase, this.getJobsUseCase,
+      this.getJobsOfCompanyUseCase,
+      {super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => CompaniesBloc(getCompaniesUseCase),
+        ),
+        BlocProvider(create: (context) => JobsBloc(getJobsUseCase)),
+        BlocProvider(create: (context) => CompanyBloc(getJobsOfCompanyUseCase))
+      ],
+      child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => CompaniesBloc(getCompaniesUseCase),
-            ),
-            BlocProvider(create: (context) => JobsBloc(getJobsUseCase))
-          ],
-          child: HomePage(),
-        ));
+        home: HomePage(),
+      ),
+    );
   }
 }
 
