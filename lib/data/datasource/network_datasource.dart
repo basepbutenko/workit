@@ -14,11 +14,11 @@ class NetworkDataSource {
       final data = await json.decode(response.data!);
       List jsonItems = data["result"];
       for (var i = 0; i < jsonItems.length; i++) {
-        String name = jsonItems[i]["name"];
-        String description = jsonItems[i]["description"];
-        String industry = jsonItems[i]["industry"];
+        String? name = jsonItems[i]["name"];
+        String? description = jsonItems[i]["description"];
+        String? industry = jsonItems[i]["industry"];
         int id = jsonItems[i]["id"];
-        result.add(Company(id, name, description, industry));
+        result.add(Company(id, name??'', description??'', industry??''));
       }
       return Future.value(result);
     } catch (e) {
@@ -58,12 +58,12 @@ class NetworkDataSource {
     final data = await json.decode(response.data!);
     List jsonItems = data["result"];
     for (var i = 0; i < jsonItems.length; i++) {
-      String title = jsonItems[i]["title"];
-      String description = jsonItems[i]["description"];
-      String city = jsonItems[i]["city"];
+      String? title = jsonItems[i]["title"];
+      String? description = jsonItems[i]["description"];
+      String? city = jsonItems[i]["city"];
       int id = jsonItems[i]["id"];
       int companyId = jsonItems[i]["companyId"];
-      result.add(Job(id, companyId, title, description, city));
+      result.add(Job(id, companyId, title??'', description??'', city??''));
     }
     return result;
   }
