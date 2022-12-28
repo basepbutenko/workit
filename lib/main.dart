@@ -15,6 +15,7 @@ import 'package:workit/ui/jobs/jobs_bloc.dart';
 import 'package:workit/ui/jobs/jobs_tab.dart';
 
 import 'domain/usecase/create_company_usecase.dart';
+import 'domain/usecase/create_job_usecase.dart';
 import 'domain/usecase/get_jobs_of_company_usecase.dart';
 
 void main() {
@@ -28,7 +29,8 @@ void main() {
   GetJobsOfCompanyUseCase getJobsOfCompanyUseCase =
       GetJobsOfCompanyUseCase(jobRepository);
   CreateCompanyUseCase createCompanyUseCase=CreateCompanyUseCase(companyRepository);
-  runApp(MyApp(getCompaniesUseCase, getJobsUseCase, getJobsOfCompanyUseCase, createCompanyUseCase));
+  CreateJobUseCase createJobUseCase=CreateJobUseCase(jobRepository);
+  runApp(MyApp(getCompaniesUseCase, getJobsUseCase, getJobsOfCompanyUseCase, createCompanyUseCase, createJobUseCase));
 }
 
 class MyApp extends StatelessWidget {
@@ -36,9 +38,9 @@ class MyApp extends StatelessWidget {
   GetCompaniesUseCase getCompaniesUseCase;
   GetJobsOfCompanyUseCase getJobsOfCompanyUseCase;
   CreateCompanyUseCase createCompanyUseCase;
-
+  CreateJobUseCase createJobUseCase;
   MyApp(this.getCompaniesUseCase, this.getJobsUseCase,
-      this.getJobsOfCompanyUseCase, this.createCompanyUseCase,
+      this.getJobsOfCompanyUseCase, this.createCompanyUseCase,this.createJobUseCase,
       {super.key});
 
   // This widget is the root of your application.
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               CompaniesBloc(getCompaniesUseCase, createCompanyUseCase),
         ),
-        BlocProvider(create: (context) => JobsBloc(getJobsUseCase)),
+        BlocProvider(create: (context) => JobsBloc(getJobsUseCase,createJobUseCase)),
         BlocProvider(create: (context) => CompanyBloc(getJobsOfCompanyUseCase))
       ],
       child: MaterialApp(

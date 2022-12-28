@@ -5,6 +5,8 @@ import 'package:workit/domain/model/company.dart';
 import 'package:workit/ui/company/company_bloc.dart';
 import 'package:workit/ui/company/company_bloc.dart';
 
+import '../jobs/create_job_dialog.dart';
+
 class CompanyPage extends StatefulWidget {
   String companyID;
    CompanyPage(this.companyID,{Key? key}) : super(key: key);
@@ -50,6 +52,17 @@ class _CompanyPageState extends State<CompanyPage> {
             child: Text('jobs'),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return CreateJobDialog(int.parse(widget.companyID));
+                });
+        },
+        icon: Icon(Icons.add),
+        label: Text("ADD"),
       ),
     );
   }
