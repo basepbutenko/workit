@@ -67,4 +67,65 @@ class NetworkDataSource {
     }
     return result;
   }
+
+  Future<void> createJob(
+      String title, String description, String city, int companyId) async {
+    try {
+      var map = {
+        'title': title,
+        'description': description,
+        'city': city,
+        'companyId': companyId
+      };
+      Response<String> response =
+          await Dio().post('http://3.75.134.87/flutter/v1/jobs', data: map);
+      print(response);
+      return Future.value();
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
+  Future<void> createCompany(
+      String name, String description, String industry) async {
+    try {
+      var map = {
+        'name': name,
+        'description': description,
+        'industry': industry
+      };
+      Response<String> response = await Dio()
+          .post('http://3.75.134.87/flutter/v1/companies', data: map);
+      print(response);
+      return Future.value();
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
+  Future<void> deleteCompany(int companyId) async {
+    try {
+      Response<String> response = await Dio()
+          .post('http://3.75.134.87/flutter/v1/companies/$companyId');
+      print(response);
+      return Future.value();
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
+  Future<void> deleteJob(int jobId) async {
+    try {
+      Response<String> response =
+          await Dio().post('http://3.75.134.87/flutter/v1/jobs/$jobId');
+      print(response);
+      return Future.value();
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
 }

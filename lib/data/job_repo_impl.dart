@@ -15,4 +15,14 @@ class JobRepositoryImpl implements JobRepository {
   Future<List<Job>> getAllJobsOfCompany(String companyID) {
     return networkDataSource.getAllJobsOfCompany(companyID);
   }
+
+  @override
+  Future<void> createJob(String title, String description, String city, int companyId) {
+    return networkDataSource.createJob(title, description, city, companyId);
+  }
+
+  @override
+  Future<void> deleteJob(int jobId) {
+    return networkDataSource.deleteJob(jobId);
+  }
 }
